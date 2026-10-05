@@ -93,7 +93,8 @@ Exemplo:
 
 
 ## Tecnologias
-
+| **Ferramenta** |  |
+|---|---|
 | **Linguagem** | C++ |
 | **Interface Gráfica** | Biblioteca SFML |
 | **Manipulação de Arquivos** | Biblioteca fstream |
