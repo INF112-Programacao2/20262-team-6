@@ -10,14 +10,14 @@ O projeto permite criar, carregar, editar e simular um ambiente composto por dif
 
 # Sumário
 
-- [Sobre o Sistema](#-sobre-o-sistema)
-- [Funcionalidades](#️-funcionalidades)
-- [Objetivo](#-objetivo)
-- [Arquitetura](#-arquitetura)
-- [Estrutura da Simulação](#-estrutura-da-simulação)
-- [Arquivos de Entrada](#️-arquivos-de-entrada)
-- [Tecnologias](#-tecnologias)
-- [Sobre o Grupo](#-sobre-o-grupo)
+- [Sobre o Sistema](##-sobre-o-sistema)
+- [Funcionalidades](##️-funcionalidades)
+- [Objetivo](##-objetivo)
+- [Arquitetura](##-arquitetura)
+- [Estrutura da Simulação](##-estrutura-da-simulação)
+- [Arquivos de Entrada](#️#-arquivos-de-entrada)
+- [Tecnologias](##-tecnologias)
+- [Sobre o Grupo](##-sobre-o-grupo)
 
 ## Sobre o Sistema
 
