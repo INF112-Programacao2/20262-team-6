@@ -71,11 +71,11 @@ O ambiente pode ser definido através de um arquivo de texto contendo a represen
 
 Exemplo:
 
-..........
-..H.......
-....P.....
-......#...
-..P....C..
+..........<br>
+..H.......<br>
+....P.....<br>
+......#...<br>
+..P....C..<br>
 ..........
 
 
