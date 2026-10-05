@@ -4,7 +4,7 @@ Sistema de simulação de um ecossistema baseado em **Autômato Celular**, desen
 
 O código foi inspirado no Jogo da Vida de John Conway (*John Conway's Game of Life*), e permite criar, carregar, editar e simular um ambiente composto por diferentes tipos de células, observando suas interações e evolução ao longo de uma quantidade X de ciclos.
 
-![Exemplo de Simulação do Jogo da Vida de Conway](image.png)
+![Exemplo de Simulação do Jogo da Vida de Conway](msc/image.png)
 
 ## Sobre o Sistema
 
