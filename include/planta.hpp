@@ -6,7 +6,11 @@ class Planta : public Celula
 private:
 
 public:
-    Planta();
+    //lembrar de atualizar o _tipo
+    Planta(int x, int y);
+
+    virtual void atualizar(Grid *grid) override;
+
     ~Planta();
 };
 #endif
