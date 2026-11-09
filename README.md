@@ -16,7 +16,9 @@ O projeto permite criar, carregar, editar e simular um ambiente composto por dif
 - [Arquitetura](#arquitetura)
 - [Estrutura da Simulação](#estrutura-da-simulação)
 - [Arquivos de Entrada](#arquivos-de-entrada)
+- [Interface Gráfica](#interface-gráfica)
 - [Tecnologias](#tecnologias)
+- [Compilação](#compilação)
 - [Sobre o Grupo](#sobre-o-grupo)
 
 ## Sobre o Sistema
@@ -61,17 +63,28 @@ O projeto tem como objetivo aplicar, em um sistema de simulação, conceitos de:
 
 ## Arquitetura
 
-                         Celula
-                            │
-          ┌───────────┬─────┴───────┬───────────────┐
-          │           │             │               │
-       Planta       Parede      Herbivoro       Carnivoro
+                  Celula
+                     │
+          ┌──────────┼──────────┐
+          │          │          │
+       Planta      Parede      Ser
+                                │
+                         ┌──────┴──────┐
+                         │             │
+                     Herbivoro     Carnivoro
 
 
       Grid              ControladorSimulacao
-       ├── Celula       GerenciadorArquivo
-       └── Posicao      Gui
-       
+       ├── Celula       GerenciadorArquivos
+       └── Posicao      Interface
+
+| **Parte** | **Responsabilidade** |
+|---|---|---|
+| **Grid, Celula e derivadas** | Estado e regras da simulação |
+| **ControladorSimulacao** | Avançar ciclos, pausar e retomar | 
+| **Interface** | Janela, teclado, mouse e desenho | 
+
+
 
 ##  Estrutura da simulação
 
@@ -92,12 +105,36 @@ Exemplo:
 ..........
 
 
+## Interface Gráfica
+
+> **(Em planejamento)** 
+A classe "Interface" ainda não foi implementada no projeto.
+
+A cada quadro, a interface processa os eventos, avança os ciclos que estiverem pendentes e desenha o grid. 
+
+| **Comando** | **Ação** |
+|---|---|
+| **Espaço** | Pausa ou retoma a simulação |
+| **Seta para a direita** | Avança um ciclo enquanto a simulação está pausada |
+| **Clique do mouse** | Insere uma célula na posição clicada |
+
+| **Célula** | **Cor** |
+|---|---|
+| **Planta** | Verde |
+| **Herbívoro** | Amarelo |
+| **Predador** | Vermelho |
+| **Parede** | Cinza |
+
 ## Tecnologias
 | **Ferramenta** |  |
 |---|---|
-| **Linguagem** | C++ |
-| **Interface Gráfica** | Biblioteca SFML |
+| **Linguagem** | C++17 |
+| **Interface Gráfica** | Biblioteca SFML 3.1.0 |
 | **Manipulação de Arquivos** | Biblioteca fstream |
+
+## Compilação
+
+O projeto ainda não compila.
 
 ## Sobre o Grupo
 | **Nome** | **Matrícula** |
