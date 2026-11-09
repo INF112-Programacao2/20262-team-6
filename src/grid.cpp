@@ -8,21 +8,20 @@ Grid::Grid(int largura,int altura)
     _ciclos = 0;
     _seres_vivos = 0;
     //criando a matriz de ponteiros para Celula
-    _grid = new Celula*[_largura][ _altura];
-    //inicializando a matriz com nullptr
-    for(int i = 0; i < _largura; i++)
-    {
-        for(int j = 0; j < _altura; j++)
-        {
+    _grid = new Celula**[_largura];
+
+    //para cada linha, cria as colunas e define como nullptr
+    for (int i = 0; i < _largura; i++) {
+        _grid[i] = new Celula*[_altura];
+        for (int j = 0; j < _altura; j++)
             _grid[i][j] = nullptr;
-        }
     }
 }
 
 void Grid::set_celula(int tipo, int x, int y)
 {
     //criando uma nova celula e adicionando na matriz
-    Celula *new_celula = new Celula(tipo, x, y);
+    Celula *new_celula = new Celula(x, y);
     _grid[x][y] = new_celula;
 }
 
@@ -59,7 +58,7 @@ Grid *Grid::get_grid(Posicao &posicao, int visao)
             if(is_valid(x+i, y+j))
             {
                 //adiciona a celula na posicao (x+i,y+j) do grid original na posicao (i+visao,j+visao) do novo grid
-                new_grid->set_celula(_grid[x+i][y+j], i+visao, j+visao);
+                new_grid->set_celula(_grid[x+i][y+j]->get_tipo(), i+visao, j+visao);
             }
         }
     }
@@ -84,30 +83,12 @@ int Grid::get_seres_vivos()
     }
     return count;
 }
-}
 
-int Grid::get_largura()
-{
-    return _largura;
-}
-
-int Grid::get_altura()
-{
-    return _altura;
-}
-
-int Grid::get_ciclos()
-{
-    return _ciclos;
-}
-
-void Grid::atualizar_posicao(Posicao &posicao)
-{
+void Grid::atualizar_posicao(Posicao &posicao) {
     // Implementation for updating the position
 }
 
-Grid::~Grid()
-{
+Grid::~Grid() {
     for(int i = 0; i < _largura; i++)
     {
         for(int j = 0; j < _altura; j++)
@@ -121,24 +102,4 @@ Grid::~Grid()
         delete[] _grid[i];
     }
     delete[] _grid;
-}
-
-void Grid::set_seres_vivos(int count)
-{
-   this->_seres_vivos = count;
-}
-
-void Grid::set_largura(int largura)
-{
-    this->_largura = largura;
-}
-
-void Grid::set_altura(int altura)
-{
-    this->_altura = altura;
-}
-
-void Grid::set_ciclos(int ciclos)
-{
-    this->_ciclos = ciclos;
-}
+};

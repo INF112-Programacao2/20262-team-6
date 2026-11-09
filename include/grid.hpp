@@ -9,11 +9,6 @@ class Grid
 private:
     Celula ***_grid;
     int _largura,_altura,_ciclos,_seres_vivos;
-    
-    void set_seres_vivos();
-    void set_largura();
-    void set_altura();
-    void set_ciclos();
 public:
     Grid(int largura,int altura);
 
