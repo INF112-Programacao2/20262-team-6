@@ -1,5 +1,9 @@
 #include "grid.hpp"
 #include "celula.hpp"
+#include "parede.hpp"
+#include "planta.hpp"
+#include "carnivoro.hpp"
+#include "herbivoro.hpp"
 
 Grid::Grid(int largura,int altura)
 {
@@ -21,7 +25,25 @@ Grid::Grid(int largura,int altura)
 void Grid::set_celula(int tipo, int x, int y)
 {
     //criando uma nova celula e adicionando na matriz
-    Celula *new_celula = new Celula(x, y);
+    Celula *new_celula = nullptr;
+    switch (tipo) {
+    case 0:
+        new_celula = new Ser(x, y);
+        break;
+    case 1:
+        new_celula = new Planta(x, y);
+        break;
+    case 2:
+        new_celula = new Parede(x, y);
+        break;
+    case 3:
+        new_celula = new Carnivoro(x, y);
+        break;
+    case 4:
+        new_celula = new Herbivoro(x, y);
+        break;
+    };
+
     _grid[x][y] = new_celula;
 }
 

@@ -1,7 +1,7 @@
 #ifndef PLANTA_HPP
 #define PLANTA_HPP
 #include "celula.hpp"
-class Planta : public Celula
+class Planta : public Ser
 {
 private:
 
@@ -10,6 +10,8 @@ public:
     Planta(int x, int y);
 
     virtual void atualizar(Grid *grid) override;
+
+    int get_tipo() const;
 
     ~Planta();
 };
