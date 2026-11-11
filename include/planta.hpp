@@ -1,7 +1,7 @@
 #ifndef PLANTA_HPP
 #define PLANTA_HPP
 #include "celula.hpp"
-class Planta : public Celula
+class Planta : public Ser
 {
 private:
     int _energia;
@@ -11,7 +11,7 @@ public:
     //recebe um grid reduzido, e atualiza a planta de acordo com as regras do jogo
     virtual void atualizar(Grid *grid) override;
 
-    int get_tipo();
+    int get_tipo() const;
 
     ~Planta();
 };
