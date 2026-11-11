@@ -9,11 +9,19 @@ class Gerenciador_arquivo
 private:
     std::string _In_file_name;
     std::string _out_file_name;
+    
+    int *_population_ser_buffer;
+    int *_population_plant_buffer;
+    int *_population_prey_buffer;
+    int *_population_carnivore_buffer;
     std::string **_file_buffer;
     //variaveis e metodos auxiliares para o buffer
-    int _capacidade;
-    int _tamanho;
+    int _capacidade_file;
+    int _tamanho_file;
+    int _capacidade_pop;
+    int _tamanho_pop;
 
+    void redimencionar_buffer(std::string **&buffer);
     void redimencionar_buffer();
     void limpar_buffer();
 
@@ -27,12 +35,13 @@ public:
     void set_save(const std::string &save);
     std::string get_save() const;
     
-    void load(Grid& grid);
+    Grid* load();
     /* metodo possivelmente obsoleto
     void load_save(Grid& grid);
     */
     void save(const Grid& grid);
-    void end_stats(const Grid& grid);
+    //define a escala de atualizacoes dos dados
+    void end_stats(const Grid& grid,int escala_populacional,int escala_temporal);
     //atualizar esse metodo em conjunto a simulacao, para que ele possa registrar os dados 
     void stats_update(const Grid& grid);
 
