@@ -27,21 +27,21 @@ void Grid::set_celula(int tipo, int x, int y)
     //criando uma nova celula e adicionando na matriz
     Celula *new_celula = nullptr;
     switch (tipo) {
-    case 0:
-        new_celula = new Ser(x, y);
-        break;
+    // case 0:
+    //     new_celula = new Ser(x, y);
+    //     break;
     case 1:
         new_celula = new Planta(x, y);
         break;
-    case 2:
-        new_celula = new Parede(x, y);
-        break;
-    case 3:
-        new_celula = new Carnivoro(x, y);
-        break;
-    case 4:
-        new_celula = new Herbivoro(x, y);
-        break;
+    // case 2:
+    //     new_celula = new Parede(x, y);
+    //     break;
+    // case 3:
+    //     new_celula = new Carnivoro(x, y);
+    //     break;
+    // case 4:
+    //     new_celula = new Herbivoro(x, y);
+    //     break;
     };
 
     _grid[x][y] = new_celula;
@@ -77,14 +77,17 @@ Grid *Grid::get_grid(Posicao &posicao, int visao)
     {
         for(int j = -visao; j <= visao; j++)
         {
-            if(is_valid(x+i, y+j))
-            {
+            if(is_valid(x+i, y+j)) 
                 //adiciona a celula na posicao (x+i,y+j) do grid original na posicao (i+visao,j+visao) do novo grid
+                if(_grid[x+i][y+j]!=nullptr)  
                 new_grid->set_celula(_grid[x+i][y+j]->get_tipo(), i+visao, j+visao);
-            }
+            else
+                //se a posicao estiver fora do grid...
+                new_grid->set_celula(2, i+visao, j+visao);//criando uma parede no local, para nao considerar
         }
     }
-    return new_grid;
+    return new_grid; //retorna o ponteiro pro sub-grid
+    //LEMBRAR DE DESALOCAR APOS O USO!!
 }
 
 int Grid::get_seres_vivos()
@@ -97,17 +100,13 @@ int Grid::get_seres_vivos()
         {
             //verifica se a celula existe e se não é uma parede
             //neste caso, plantas estao sendo consideradas como seres vivos
-            if(_grid[i][j] != nullptr && _grid[i][j]->get_tipo() != 0)
+            if(_grid[i][j] != nullptr && _grid[i][j]->get_tipo() != 0 && _grid[i][j]->get_tipo() != 2)
             {
                 count++;
             }
         }
     }
     return count;
-}
-
-void Grid::atualizar_posicao(Posicao &posicao) {
-    // Implementation for updating the position
 }
 
 Grid::~Grid() {

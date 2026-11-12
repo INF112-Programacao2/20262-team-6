@@ -4,11 +4,11 @@
 class Planta : public Ser
 {
 private:
-
+    int _energia;
 public:
-    //lembrar de atualizar o _tipo
     Planta(int x, int y);
 
+    //recebe um grid reduzido, e atualiza a planta de acordo com as regras do jogo
     virtual void atualizar(Grid *grid) override;
 
     int get_tipo() const;
