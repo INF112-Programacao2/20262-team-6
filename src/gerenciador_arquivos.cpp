@@ -1,8 +1,11 @@
 #include <string>
 #include <fstream>
 #include "gerenciador_arquivos.hpp"
+#include "celula.hpp"
+#include "grid.hpp"
 #include <filesystem>
 #include <stdexcept>
+#include <algorithm>
 
 Gerenciador_arquivo::Gerenciador_arquivo(std::string &arquivo):_In_file_name(arquivo),_out_file_name(""),\
     _capacidade_file(10),_tamanho_file(0),_capacidade_pop(100),_tamanho_pop(0){
@@ -38,7 +41,8 @@ void Gerenciador_arquivo::limpar_buffer()
 void Gerenciador_arquivo::redimencionar_buffer(std::string **&buffer)
 {   
     //duplica a capacidade do buffer, copiando o anterior para o novo ponteiro e deletando o antigo
-    this->_capacidade_file*=2;
+    //se o buffer foi apagado, volta para tamanho 10
+    this->_capacidade_file = std::max(10, this->_capacidade_file * 2);
 
     std::string **novo_buffer = new std::string* [this->_capacidade_file]();
 
@@ -52,7 +56,7 @@ void Gerenciador_arquivo::redimencionar_buffer(std::string **&buffer)
 void Gerenciador_arquivo::redimencionar_buffer()
 {   
     //duplica a capacidade do buffer, copiando o anterior para o novo ponteiro e deletando o antigo
-    this->_capacidade_pop*=2;
+    this->_capacidade_pop = std::max(100, this->_capacidade_pop * 2);
 
     int*novo_buffer_plant = new int [this->_capacidade_pop]();
     int*novo_buffer_prey = new int [this->_capacidade_pop]();
@@ -81,7 +85,8 @@ void Gerenciador_arquivo::set_file(const std::string &arquivo)
 {
     if (!std::filesystem::exists(arquivo)) {
         // faz o throw se o arquivo de input n existe
-        throw std::invalid_argument("Arquivo nao encontrado");
+        std::string error = "Arquivo " + arquivo + " nao encontrado ou nao existe\n";
+        throw std::invalid_argument(error);
     }
     this->_In_file_name = arquivo;
 }
@@ -106,10 +111,70 @@ Grid* Gerenciador_arquivo::load()
     
 }
 
-void Gerenciador_arquivo::stats_update(const Grid& grid)
+void Gerenciador_arquivo::save(Grid& grid)
+{
+    if (this->_tamanho_file >= this->_capacidade_file) {
+        this->redimencionar_buffer(this->_file_buffer);
+    }
+    std::string cell_buffer;
+    for (int i = 0; i < grid.get_altura(); i++)
+    {
+        for (int j = 0; j < grid.get_largura(); j++)
+        {
+            Celula *cell = grid.get_celula(j,i);
+            if(cell == nullptr)
+                cell_buffer=" ";
+            else if(cell->get_tipo()==0)
+                cell_buffer="*";
+            else if(cell->get_tipo()==1)
+                cell_buffer="P";
+            else if(cell->get_tipo()==2)
+                cell_buffer="#";
+            else if(cell->get_tipo()==3)
+                cell_buffer="C";
+            else if(cell->get_tipo()==4)
+                cell_buffer="H";
+            *this->_file_buffer[this->_tamanho_file]+=cell_buffer;
+        }
+        *this->_file_buffer[this->_tamanho_file]+="\n";
+        this->_tamanho_file++;
+    }
+    
+}
+
+void Gerenciador_arquivo::stats_update(Grid& grid)
 {
     int seres=0,plantas=0,carnivoros=0,herbivoros=0;
-
+    if (this->_tamanho_pop >= this->_capacidade_pop) {
+        this->redimencionar_buffer();
+    }
+    for (int i = 0; i < grid.get_altura(); i++)
+    {
+        for (int j = 0; j < grid.get_largura(); j++)
+        {
+            Celula *cell = grid.get_celula(j,i);
+            //evitar invocar metodos em um objeto inexistente
+            if(cell != nullptr)
+            {
+                if(cell->get_tipo()==0)
+                    seres++;
+                else if(cell->get_tipo()==1)
+                    plantas++;
+                else if(cell->get_tipo()==2)
+                    continue; //tipo parede, nao ha nada a ser feito
+                else if(cell->get_tipo()==3)
+                    carnivoros++;
+                else if(cell->get_tipo()==4)
+                    herbivoros++;
+            }
+        }
+        
+    }
+    this->_population_plant_buffer[this->_tamanho_pop]=plantas;
+    this->_population_prey_buffer[this->_tamanho_pop]=herbivoros;
+    this->_population_carnivore_buffer[this->_tamanho_pop]=carnivoros;
+    this->_population_ser_buffer[this->_tamanho_pop]=seres;
+    this->_tamanho_pop++;
 }
 
 Gerenciador_arquivo::~Gerenciador_arquivo()

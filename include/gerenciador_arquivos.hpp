@@ -27,8 +27,7 @@ private:
 
 public:
     Gerenciador_arquivo(std::string &arquivo);
-
-    //funcoes boleanas dão throw, que devem ser capturados e tratados extenamente
+    //throw um invalid_argument se o arquivo nao existir 
     void set_file(const std::string &arquivo);
     std::string get_file() const;
 
@@ -39,11 +38,11 @@ public:
     /* metodo possivelmente obsoleto
     void load_save(Grid& grid);
     */
-    void save(const Grid& grid);
+    void save(Grid& grid);
     //define a escala de atualizacoes dos dados
-    void end_stats(const Grid& grid,int escala_populacional,int escala_temporal);
+    void end_stats(Grid& grid,int escala_populacional,int escala_temporal);
     //atualizar esse metodo em conjunto a simulacao, para que ele possa registrar os dados 
-    void stats_update(const Grid& grid);
+    void stats_update(Grid& grid);
 
     ~Gerenciador_arquivo();
 };
