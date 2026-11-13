@@ -1,3 +1,9 @@
+/*
+Thiago Luis de Arruda Rodrigues
+to do: adicionar a leitura e salvamento de ciclos restantes aos saves e loads
+       terminar load()
+       terminar metodos nao implementados
+*/
 #include <string>
 #include <fstream>
 #include "gerenciador_arquivos.hpp"
@@ -35,6 +41,15 @@ void Gerenciador_arquivo::limpar_buffer()
         delete this->_file_buffer[i];
     delete[] this->_file_buffer;
     this->_file_buffer=nullptr;
+    _capacidade_file=_tamanho_file=0;
+}
+
+void Gerenciador_arquivo::limpar_buffer(std::string **&buffer)
+{
+    for (int i=0;i<this->_tamanho_file;i++)
+        delete buffer[i];
+    delete[] buffer;
+    buffer=nullptr;
     _capacidade_file=_tamanho_file=0;
 }
 
@@ -108,19 +123,72 @@ std::string Gerenciador_arquivo::get_save() const
 
 Grid* Gerenciador_arquivo::load()
 {
+    //verifica se o user ja setou um arquivo de entrada
+    if(this->_out_file_name.empty())
+        throw std::invalid_argument("ainda nao foi definido um arquivo de entrada\n");
+
+    //inicio do procedimeento de load em arquivo
+    //cria o stream e verifica se foi aberto
+    std::ifstream arquivo(this->_out_file_name);
+    if(!arquivo.is_open())
+    {
+        throw std::runtime_error("nao foi possivel abrir o arquivo " + this->_out_file_name + "\n verifique que o arquivo exista\n");
+    }
+
+    //limpa possiveis buffers residuais
+    limpar_buffer(this->_file_buffer);
+
+    //le as linhas do arquivo e grava no buffer
+    for(std::string linha; std::getline(arquivo,linha);)
+    {
+        //tratamento para windows
+        if (!linha.empty() && linha.back() == '\r') 
+        {
+            linha.pop_back();
+        }
+        if (linha.empty()) {
+            continue;
+        }
+        //verifica se o buffer n esta cheio
+        if (this->_tamanho_file >= this->_capacidade_file) {
+            this->redimencionar_buffer(this->_file_buffer);
+        }
+        this->_file_buffer[this->_tamanho_file]= new std::string(linha);
+        this->_tamanho_file++;
+    }
+
+    arquivo.close(); 
+
+    //tratamento de mapas nao retangulares
+    int largura=0;
+    if (this->_tamanho_file == 0) {
+        throw std::runtime_error("arquivo de entrada vazio ou corrompido\n");
+    }
+
+    for (int i = 0; i < this->_tamanho_file; i++)
+    {
+        
+    }
     
 }
 
 void Gerenciador_arquivo::save(Grid& grid)
 {
-    if (this->_tamanho_file >= this->_capacidade_file) {
-        this->redimencionar_buffer(this->_file_buffer);
-    }
-    std::string cell_buffer;
+    //verifica se o user ja setou um arquivo de saida
+    if(this->_out_file_name.empty())
+        throw std::invalid_argument("ainda nao foi definido um arquivo de saida\n");
+    //limpa possiveis buffers residuais
+    limpar_buffer(this->_file_buffer);
     for (int i = 0; i < grid.get_altura(); i++)
     {
+        //verifica se o buffer n esta cheio
+        if (this->_tamanho_file >= this->_capacidade_file) {
+            this->redimencionar_buffer(this->_file_buffer);
+        }
+        this->_file_buffer[this->_tamanho_file]= new std::string();
         for (int j = 0; j < grid.get_largura(); j++)
         {
+            std::string cell_buffer = " ";
             Celula *cell = grid.get_celula(j,i);
             if(cell == nullptr)
                 cell_buffer=" ";
@@ -137,9 +205,20 @@ void Gerenciador_arquivo::save(Grid& grid)
             *this->_file_buffer[this->_tamanho_file]+=cell_buffer;
         }
         *this->_file_buffer[this->_tamanho_file]+="\n";
-        this->_tamanho_file++;
+        this->_tamanho_file++; //vai para uma linha nova
     }
     
+    //inicio do procedimeento de save em arquivo
+    //cria o stream e verifica se foi aberto
+    std::ofstream arquivo_save(this->_out_file_name);
+    if(!arquivo_save.is_open())
+    {
+        throw std::runtime_error("nao foi possivel abrir o arquivo " + this->_out_file_name + "\n");
+    }
+    for (int i = 0; i < this->_tamanho_file; i++) {
+        arquivo_save << *this->_file_buffer[i];
+    }
+    arquivo_save.close();
 }
 
 void Gerenciador_arquivo::stats_update(Grid& grid)

@@ -15,15 +15,17 @@ private:
     int *_population_prey_buffer;
     int *_population_carnivore_buffer;
     std::string **_file_buffer;
-    //variaveis e metodos auxiliares para o buffer
+    //variaveis auxiliares para o buffer
     int _capacidade_file;
     int _tamanho_file;
     int _capacidade_pop;
     int _tamanho_pop;
 
+    //metodos auxiliares para o buffer, com sobrecargas para diferente manuseio de ponteiros
     void redimencionar_buffer(std::string **&buffer);
     void redimencionar_buffer();
     void limpar_buffer();
+    void limpar_buffer(std::string **&buffer);
 
 public:
     Gerenciador_arquivo(std::string &arquivo);
