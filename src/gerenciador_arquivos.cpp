@@ -1,21 +1,20 @@
 /*
 Thiago Luis de Arruda Rodrigues
-to do: terminar metodos nao implementados
-       introduzir _populacao_maxima aos dados
-       adicionar atributos estastiscos _maior_familia e _mais_velho
+to do: terminar end_stats();
 */
 #include <string>
 #include <fstream>
 #include "gerenciador_arquivos.hpp"
 #include "celula.hpp"
 #include "grid.hpp"
+#include "ser.hpp"
 #include <filesystem>
 #include <stdexcept>
 #include <algorithm>
 #include <iostream>
 
-Gerenciador_arquivo::Gerenciador_arquivo(std::string &arquivo):_In_file_name(arquivo),_out_file_name(""),\
-    _max_ciclos(100),_capacidade_file(10),_tamanho_file(0),_capacidade_pop(100),_tamanho_pop(0){
+Gerenciador_arquivo::Gerenciador_arquivo(std::string &arquivo):_In_file_name(arquivo),_out_file_name(""),_stats_file_name(""),\
+    _max_ciclos(100),_max_pop(0),_maior_familia(0),_mais_velho(0),_capacidade_file(10),_tamanho_file(0),_capacidade_pop(100),_tamanho_pop(0){
 
     //inicia o vetor com tamanho 10, propenso a aumento posteriormente
     this->_file_buffer= new std::string* [_capacidade_file]();
@@ -125,6 +124,11 @@ std::string Gerenciador_arquivo::get_save() const
 int Gerenciador_arquivo::get_max_ciclos() const
 {
     return this->_max_ciclos;
+}
+
+int Gerenciador_arquivo::get_max_pop() const
+{
+    return this->_max_pop;
 }
 
 Grid* Gerenciador_arquivo::load()
@@ -303,6 +307,11 @@ void Gerenciador_arquivo::save(Grid& grid)
     save(grid,grid.get_ciclos());
 }
 
+void Gerenciador_arquivo::end_stats(Grid& grid,int escala_populacional,int escala_temporal)
+{
+
+}
+
 void Gerenciador_arquivo::stats_update(Grid& grid)
 {
     int seres=0,plantas=0,carnivoros=0,herbivoros=0;
@@ -316,21 +325,39 @@ void Gerenciador_arquivo::stats_update(Grid& grid)
             Celula *cell = grid.get_celula(j,i);
             //evitar invocar metodos em um objeto inexistente
             if(cell != nullptr)
-            {
-                if(cell->get_tipo()==0)
+            {   
+
+                if(cell->get_tipo()==0){
                     seres++;
-                else if(cell->get_tipo()==1)
+                }
+                else if(cell->get_tipo()==1){
                     plantas++;
+                }
                 else if(cell->get_tipo()==2)
                     continue; //tipo parede, nao ha nada a ser feito
-                else if(cell->get_tipo()==3)
+                else if(cell->get_tipo()==3){
                     carnivoros++;
-                else if(cell->get_tipo()==4)
+                }
+                else if(cell->get_tipo()==4){
                     herbivoros++;
+                }
+
+                //usado para atributos de seres vivos
+                Ser* ser = static_cast<Ser*>(cell);
+
+                this->_maior_familia=std::max(ser->get_qtd_filhos(),
+                this->_maior_familia);
+
+                this->_mais_velho=std::max(ser->get_idade(),
+                this->_mais_velho);
             }
         }
         
     }
+    
+    int pop= seres + plantas + herbivoros + carnivoros;
+    this->_max_pop=std::max(pop,this->_max_pop);
+
     this->_population_plant_buffer[this->_tamanho_pop]=plantas;
     this->_population_prey_buffer[this->_tamanho_pop]=herbivoros;
     this->_population_carnivore_buffer[this->_tamanho_pop]=carnivoros;

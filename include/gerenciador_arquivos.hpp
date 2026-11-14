@@ -9,7 +9,11 @@ class Gerenciador_arquivo
 private:
     std::string _In_file_name;
     std::string _out_file_name;
+    std::string _stats_file_name;
     int _max_ciclos;
+    int _max_pop;
+    int _maior_familia;
+    int _mais_velho;
     
     int *_population_ser_buffer;
     int *_population_plant_buffer;
@@ -38,6 +42,7 @@ public:
     std::string get_save() const;
     
     int get_max_ciclos() const;
+    int get_max_pop() const;
 
     Grid* load();
     /* metodo possivelmente obsoleto
