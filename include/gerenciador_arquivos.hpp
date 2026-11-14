@@ -36,6 +36,7 @@ private:
 
 public:
     Gerenciador_arquivo(std::string &arquivo);
+
     //throw um invalid_argument se o arquivo nao existir 
     void set_file(const std::string &arquivo);
     std::string get_file() const;
@@ -49,15 +50,17 @@ public:
     int get_max_ciclos() const;
     int get_max_pop() const;
 
+    //throw um invalid_argument, um runtime_error ou um cerr
     Grid* load();
-    /* metodo possivelmente obsoleto
-    void load_save(Grid& grid);
-    */
+
+    //throw um invalid_argument ou um runtime_error
     void save(Grid& grid);
     //sobrecarga em caso de ciclo n salvo no grid
+    //throw um invalid_argument, um runtime_error
     void save(Grid& grid, int ciclo_atual);
 
     //define a escala de atualizacoes dos dados
+    //throw um invalid_argument, um runtime_error
     void end_stats(int escala_populacional,int escala_temporal);
     //atualizar esse metodo em conjunto a simulacao, para que ele possa registrar os dados 
     void stats_update(Grid& grid);
