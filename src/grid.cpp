@@ -66,10 +66,9 @@ bool Grid::is_valid(int x, int y)
 //recebe posicao da celula e o raio de visao dela
 Grid *Grid::get_grid(Posicao &posicao, int visao)
 {
-    //gera um novo grid com as celulas dentro do raio de visao da celula na posicao (x,y)
+    //cria um novo grid com tamanho (visao*2+1) x (visao*2+1) ainda vazio centrado na posicao dada
     int x = posicao.get_x();
     int y = posicao.get_y();
-    //cria um novo grid com tamanho (visao*2+1) x (visao*2+1) ainda vazio
     Grid *new_grid = new Grid(visao*2+1, visao*2+1);
 
     //percorre o grid original e adiciona as celulas dentro do raio de visao no novo grid
@@ -83,11 +82,11 @@ Grid *Grid::get_grid(Posicao &posicao, int visao)
                 new_grid->set_celula(_grid[x+i][y+j]->get_tipo(), i+visao, j+visao);
             else
                 //se a posicao estiver fora do grid...
-                new_grid->set_celula(2, i+visao, j+visao);//criando uma parede no local, para nao considerar
+                new_grid->set_celula(2, i+visao, j+visao);//cria uma parede no local, para nao ser considerado vazio
         }
     }
     return new_grid; //retorna o ponteiro pro sub-grid
-    //LEMBRAR DE DESALOCAR APOS O USO!!
+    //LEMBRAR DE DESALOCAR APOS O USO!! (atualizar_posicao ja realiza a desalocacao)
 }
 
 int Grid::get_seres_vivos()
@@ -108,6 +107,20 @@ int Grid::get_seres_vivos()
     }
     return count;
 }
+
+void Grid::passar_ciclo(){
+    _ciclos++;
+};
+
+void Grid::set_seres_vivos(int qtd){
+    _seres_vivos=qtd;
+};
+
+void Grid::atualizar_posicao(Posicao &posicao){
+    Grid *visao = get_grid(posicao, 1); //criando um sub-grid com raio 1
+    _grid[posicao.get_x()][posicao.get_y()]->atualizar(visao);//atualizando a celula
+    delete visao;//deletando o subgrid criado)
+};
 
 Grid::~Grid() {
     for(int i = 0; i < _largura; i++)

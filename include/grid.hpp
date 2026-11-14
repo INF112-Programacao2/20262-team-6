@@ -23,6 +23,8 @@ public:
     int get_largura();
     int get_altura();
     int get_ciclos();
+    void passar_ciclo();
+    void set_seres_vivos(int qtd);
 
     void atualizar_posicao(Posicao &posicao);
 
