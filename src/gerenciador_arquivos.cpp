@@ -1,8 +1,6 @@
 /*
 Thiago Luis de Arruda Rodrigues
-to do: adicionar a leitura e salvamento de ciclos restantes aos saves e loads
-       terminar metodos nao implementados
-       alterar save para informar a quantidade de ciclos restantes
+to do: terminar metodos nao implementados
        introduzir _populacao_maxima aos dados
        adicionar atributos estastiscos _maior_familia e _mais_velho
 */
@@ -239,13 +237,18 @@ Grid* Gerenciador_arquivo::load()
     return novo_grid;
 }
 
-void Gerenciador_arquivo::save(Grid& grid)
+void Gerenciador_arquivo::save(Grid& grid, int ciclo_atual)
 {
     //verifica se o user ja setou um arquivo de saida
     if(this->_out_file_name.empty())
         throw std::invalid_argument("ainda nao foi definido um arquivo de saida\n");
+    
     //limpa possiveis buffers residuais
     limpar_buffer(this->_file_buffer);
+
+    // garante que ciclos restantes nunca seja gravado como negativo
+    int ciclos_restantes = std::max(0, this->_max_ciclos - ciclo_atual);
+
     for (int i = 0; i < grid.get_altura(); i++)
     {
         //verifica se o buffer n esta cheio
@@ -282,6 +285,10 @@ void Gerenciador_arquivo::save(Grid& grid)
     {
         throw std::runtime_error("nao foi possivel abrir o arquivo " + this->_out_file_name + "\n");
     }
+
+    // grava o cabecalho de ciclos restantes no topo do arquivo
+    arquivo_save << "C:" << ciclos_restantes << "\n";
+
     for (int i = 0; i < this->_tamanho_file; i++) {
         arquivo_save << *this->_file_buffer[i];
     }

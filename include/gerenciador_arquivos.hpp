@@ -44,6 +44,9 @@ public:
     void load_save(Grid& grid);
     */
     void save(Grid& grid);
+    //sobrecarga em caso de ciclo n salvo no grid
+    void save(Grid& grid, int ciclo_atual);
+
     //define a escala de atualizacoes dos dados
     void end_stats(Grid& grid,int escala_populacional,int escala_temporal);
     //atualizar esse metodo em conjunto a simulacao, para que ele possa registrar os dados 
