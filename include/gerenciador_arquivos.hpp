@@ -2,6 +2,7 @@
 #define GERENCIADOR_ARQUIVO_HPP
 
 #include <string>
+#include <fstream>
 #include "grid.hpp"
 
 class Gerenciador_arquivo
@@ -31,6 +32,7 @@ private:
     void redimencionar_buffer();
     void limpar_buffer();
     void limpar_buffer(std::string **&buffer);
+    void porcentagem_populacional(int populacao, int escala_populacional,char simbolo, std::ofstream& o_file);
 
 public:
     Gerenciador_arquivo(std::string &arquivo);
@@ -40,6 +42,9 @@ public:
 
     void set_save(const std::string &save);
     std::string get_save() const;
+
+    void set_stats(const std::string &stats);
+    std::string get_stats() const;
     
     int get_max_ciclos() const;
     int get_max_pop() const;
@@ -53,7 +58,7 @@ public:
     void save(Grid& grid, int ciclo_atual);
 
     //define a escala de atualizacoes dos dados
-    void end_stats(Grid& grid,int escala_populacional,int escala_temporal);
+    void end_stats(int escala_populacional,int escala_temporal);
     //atualizar esse metodo em conjunto a simulacao, para que ele possa registrar os dados 
     void stats_update(Grid& grid);
 

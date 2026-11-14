@@ -1,17 +1,20 @@
 /*
 Thiago Luis de Arruda Rodrigues
-to do: terminar end_stats();
+to do: 
+
 */
-#include <string>
-#include <fstream>
+
 #include "gerenciador_arquivos.hpp"
 #include "celula.hpp"
 #include "grid.hpp"
 #include "ser.hpp"
+
+#include <string>
 #include <filesystem>
 #include <stdexcept>
 #include <algorithm>
 #include <iostream>
+#include <cmath>
 
 Gerenciador_arquivo::Gerenciador_arquivo(std::string &arquivo):_In_file_name(arquivo),_out_file_name(""),_stats_file_name(""),\
     _max_ciclos(100),_max_pop(0),_maior_familia(0),_mais_velho(0),_capacidade_file(10),_tamanho_file(0),_capacidade_pop(100),_tamanho_pop(0){
@@ -129,6 +132,16 @@ int Gerenciador_arquivo::get_max_ciclos() const
 int Gerenciador_arquivo::get_max_pop() const
 {
     return this->_max_pop;
+}
+
+void Gerenciador_arquivo::set_stats(const std::string &stats)
+{
+    this->_stats_file_name = stats;
+}
+
+std::string Gerenciador_arquivo::get_stats() const
+{
+    return this->_stats_file_name;
 }
 
 Grid* Gerenciador_arquivo::load()
@@ -307,9 +320,67 @@ void Gerenciador_arquivo::save(Grid& grid)
     save(grid,grid.get_ciclos());
 }
 
-void Gerenciador_arquivo::end_stats(Grid& grid,int escala_populacional,int escala_temporal)
+void Gerenciador_arquivo::porcentagem_populacional(int populacao, int escala_populacional,char simbolo, std::ofstream& o_file)
 {
+    if (this->_max_pop == 0) 
+        return;
 
+    double proporcao = ((double)(populacao) * escala_populacional) / this->_max_pop;
+    int qtd_chars = std::min(escala_populacional, static_cast<int>(std::ceil(proporcao)));
+
+    o_file << std::string(qtd_chars, simbolo);
+}
+
+void Gerenciador_arquivo::end_stats(int escala_populacional,int escala_temporal)
+{
+    //verifica se o user ja setou um arquivo de saida
+    if(this->_stats_file_name.empty())
+        throw std::invalid_argument("ainda nao foi definido um arquivo de saida\n");
+    
+    if(escala_populacional<=0)
+        throw std::invalid_argument("escala populacional deve ser maior que 0\n");
+    if(escala_temporal<=0||escala_temporal>this->_max_ciclos)
+    {
+        std::string error = "escala temporal deve estar no intervalo: 0<x<=" + std::to_string(this->_max_ciclos); 
+        throw std::invalid_argument(error + "\n");
+    }
+    
+    std::ofstream stats_log(this->_stats_file_name);
+    if(!stats_log.is_open())
+    {
+        throw std::runtime_error("nao foi possivel abrir o arquivo " + this->_stats_file_name + "\n");
+    }
+    
+    stats_log << "GRAFICO POPULACAO x TEMPO\n";
+    stats_log << "legenda:\n";
+    stats_log << "* : ser\n";
+    stats_log << "P : planta\n";
+    stats_log << "H : herbivoro\n";
+    stats_log << "C : carnivoro\n";
+
+    //variaveis auxiliares para nao efetuar operacoes repetidas no loop
+    char c_aux[5]="*PHC";
+    int *Pop_aux[4] = {
+        this->_population_ser_buffer,
+        this->_population_plant_buffer,
+        this->_population_prey_buffer,
+        this->_population_carnivore_buffer
+    };
+
+    for (int i = 0; i < _tamanho_pop; i+=escala_temporal)
+    {
+        stats_log<< "C: "<< i << " |";
+        for (int j = 0; j < 4; j++)
+        {
+            porcentagem_populacional(Pop_aux[j][i],escala_populacional,c_aux[j],stats_log);
+        }
+        stats_log << "\n";
+    }
+    stats_log << "Recordes: \n";
+    stats_log << "-Populacao maxima simultanea: " << this->_max_pop << " celulas\n";
+    stats_log << "-Maior familia: " << this->_maior_familia << " celulas filhas\n";
+    stats_log << "-Celula mais velha: Sobreviveu " << this->_mais_velho<< " ciclos\n";
+    stats_log.close();
 }
 
 void Gerenciador_arquivo::stats_update(Grid& grid)
@@ -340,6 +411,10 @@ void Gerenciador_arquivo::stats_update(Grid& grid)
                 }
                 else if(cell->get_tipo()==4){
                     herbivoros++;
+                }
+                else 
+                {
+                    continue;
                 }
 
                 //usado para atributos de seres vivos
