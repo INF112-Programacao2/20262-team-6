@@ -30,5 +30,7 @@ public:
     Grid *get_grid() const;
 
     ~ControladorSimulacao();
+
+    void atualizar_posicao(Posicao &posicao);
 };
 #endif

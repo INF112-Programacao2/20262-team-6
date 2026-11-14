@@ -6,24 +6,30 @@ ControladorSimulacao::ControladorSimulacao(Grid *grid, float segundos_por_ciclo)
 _grid(grid),_pausado(false),_segundos_por_ciclo(segundos_por_ciclo),_tempo_acumulado(0){};
 
 void ControladorSimulacao::atualizar(float tempo){
-    //percorre o grid
-    for(int i = 0; i < _grid->get_largura(); i++)
-        for(int j = 0; j < _grid->get_altura(); j++)
-            if(_grid->get_celula(i, j) != nullptr){ //se a posicao nao estiver vazia (ou seja, esta com uma celula)  
-                Posicao posicaoAtual(i,j);
-                Grid *visao = _grid->get_grid(posicaoAtual, 1); //criando um sub-grid com raio 1
-                _grid->get_celula(i, j)->atualizar(visao);//atualizando a celula
-                delete visao;//deletando o subgrid criado
-            }
+    int num_de_ciclos = tempo / get_segundos_por_ciclo(); //qtd de ciclos 
+    for(int x = 0; x<num_de_ciclos; x++){ //roda x ciclos
+        _grid->passar_ciclo();
+        _grid->set_seres_vivos(_grid->get_seres_vivos());
+        for(int i = 0; i < _grid->get_largura(); i++)
+            for(int j = 0; j < _grid->get_altura(); j++)
+                if(_grid->get_celula(i, j) != nullptr){ //se a posicao nao estiver vazia (ou seja, esta com uma celula)  
+                    Posicao posicaoAtual(i,j);
+                    _grid->atualizar_posicao(posicaoAtual);//atualiza ela
+
+                    if(_grid->get_celula(i,j)->reroduzir())//se a celula for reproduzir
+                        _grid->set_celula(_grid->get_celula()->get_tipo(),i ,j);//cria uma nova celula no local designado
+                    };
+                }
+    }
 };
 
 void ControladorSimulacao::avancar_ciclo(){
-    atualizar(1);
+    atualizar(get_segundos_por_ciclo());//passa apenas 1 ciclo
 };
 
 void ControladorSimulacao::avancar_ciclos(int qtd){
-    for(int i = 0; i < qtd; i++)
-        atualizar(1);
+    for(int i = 0; i < qtd; i++)//atualiza x ciclos
+        atualizar(get_segundos_por_ciclo());
 };
 
 
