@@ -1,8 +1,10 @@
 /*
 Thiago Luis de Arruda Rodrigues
 to do: adicionar a leitura e salvamento de ciclos restantes aos saves e loads
-       terminar load()
        terminar metodos nao implementados
+       alterar save para informar a quantidade de ciclos restantes
+       introduzir _populacao_maxima aos dados
+       adicionar atributos estastiscos _maior_familia e _mais_velho
 */
 #include <string>
 #include <fstream>
@@ -12,9 +14,10 @@ to do: adicionar a leitura e salvamento de ciclos restantes aos saves e loads
 #include <filesystem>
 #include <stdexcept>
 #include <algorithm>
+#include <iostream>
 
 Gerenciador_arquivo::Gerenciador_arquivo(std::string &arquivo):_In_file_name(arquivo),_out_file_name(""),\
-    _capacidade_file(10),_tamanho_file(0),_capacidade_pop(100),_tamanho_pop(0){
+    _max_ciclos(100),_capacidade_file(10),_tamanho_file(0),_capacidade_pop(100),_tamanho_pop(0){
 
     //inicia o vetor com tamanho 10, propenso a aumento posteriormente
     this->_file_buffer= new std::string* [_capacidade_file]();
@@ -121,22 +124,32 @@ std::string Gerenciador_arquivo::get_save() const
     return this->_out_file_name;
 }
 
+int Gerenciador_arquivo::get_max_ciclos() const
+{
+    return this->_max_ciclos;
+}
+
 Grid* Gerenciador_arquivo::load()
 {
     //verifica se o user ja setou um arquivo de entrada
-    if(this->_out_file_name.empty())
+    if(this->_In_file_name.empty())
         throw std::invalid_argument("ainda nao foi definido um arquivo de entrada\n");
 
     //inicio do procedimeento de load em arquivo
     //cria o stream e verifica se foi aberto
-    std::ifstream arquivo(this->_out_file_name);
+    std::ifstream arquivo(this->_In_file_name);
     if(!arquivo.is_open())
     {
-        throw std::runtime_error("nao foi possivel abrir o arquivo " + this->_out_file_name + "\n verifique que o arquivo exista\n");
+        throw std::runtime_error("nao foi possivel abrir o arquivo " + this->_In_file_name + "\n verifique que o arquivo exista\n");
     }
 
     //limpa possiveis buffers residuais
     limpar_buffer(this->_file_buffer);
+    this->_max_ciclos = 100;
+
+    int largura=0;
+    bool cabecalho_verificado = false;
+    std::string marcador = "C:";
 
     //le as linhas do arquivo e grava no buffer
     for(std::string linha; std::getline(arquivo,linha);)
@@ -149,27 +162,81 @@ Grid* Gerenciador_arquivo::load()
         if (linha.empty()) {
             continue;
         }
+
+        //verifica dados nao posicionais(como quantidade de ciclos desejado)
+        if (!cabecalho_verificado) {
+            cabecalho_verificado = true;
+
+            if (linha.rfind(marcador, 0) == 0) {
+                std::string error("numero de ciclos invalido. assumindo 100.\n");
+                try {
+                    int valor = std::stoi(linha.substr(marcador.size()));
+                    if (valor > 0) {
+                        this->_max_ciclos = valor;
+                    } else {
+                        std::cerr << error;
+                    }
+                } catch (const std::exception&) {
+                    std::cerr << error;
+                }
+                continue; // descarta a linha de cabecalho para nao entrar no grid
+            }
+        }
+
         //verifica se o buffer n esta cheio
         if (this->_tamanho_file >= this->_capacidade_file) {
             this->redimencionar_buffer(this->_file_buffer);
         }
         this->_file_buffer[this->_tamanho_file]= new std::string(linha);
+        largura = std::max(largura,(int)linha.size());
         this->_tamanho_file++;
     }
 
     arquivo.close(); 
 
+
     //tratamento de mapas nao retangulares
-    int largura=0;
     if (this->_tamanho_file == 0) {
         throw std::runtime_error("arquivo de entrada vazio ou corrompido\n");
     }
-
+    Grid* novo_grid = new Grid(largura, this->_tamanho_file);
     for (int i = 0; i < this->_tamanho_file; i++)
     {
-        
+        //tratamento de linhas mal formatadas
+        this->_file_buffer[i]->resize(largura, ' ');
+        for (int j = 0; j < largura; j++)
+        {
+            switch((*this->_file_buffer[i])[j])
+            {
+                case ' ':
+                    break;
+                case '*':
+                    novo_grid->set_celula(0,j,i);
+                    break;
+                case 'P':
+                    novo_grid->set_celula(1,j,i);
+                    break;
+                case '#':
+                    novo_grid->set_celula(2,j,i);
+                    break;
+                case 'C':
+                    novo_grid->set_celula(3,j,i);
+                    break;
+                case 'H':
+                    novo_grid->set_celula(4,j,i);
+                    break;
+                default:
+                    std::cerr << "caracter de celula '" << (*this->_file_buffer[i])[j] << "' em (" <<
+                    j << "," <<i << "), assumindo celula vazia ' '\n";
+                    break;
+            }
+        }
     }
-    
+
+    //economia de memoria
+    limpar_buffer(this->_file_buffer);
+
+    return novo_grid;
 }
 
 void Gerenciador_arquivo::save(Grid& grid)
@@ -219,6 +286,9 @@ void Gerenciador_arquivo::save(Grid& grid)
         arquivo_save << *this->_file_buffer[i];
     }
     arquivo_save.close();
+    
+    //economia de memoria
+    limpar_buffer(this->_file_buffer);
 }
 
 void Gerenciador_arquivo::stats_update(Grid& grid)
