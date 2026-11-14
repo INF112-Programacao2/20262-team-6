@@ -1,6 +1,7 @@
 #ifndef SER_HPP
 #define SER_HPP
 #include "celula.hpp"
+#include "posicao.hpp"
 class Ser : public Celula
 {
 protected:
@@ -10,6 +11,8 @@ protected:
     void set_qtd_filhos(int qtd);
     void set_idade(int qtd);
     void set_energia(int qtd);
+    bool _quer_reproduzir=false;
+    Posicao _posi_filho;
 
 public:
     Ser(int x, int y);
@@ -19,6 +22,8 @@ public:
     int get_energia();
     std::string get_regras();
     virtual void atualizar(Grid *grid);
+    bool reproduzir();
+    Posicao get_posi_filho() const;
 
     ~Ser();
 };

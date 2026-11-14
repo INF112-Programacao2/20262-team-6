@@ -1,5 +1,6 @@
 #include "controlador_simulacao.hpp"
 #include "grid.hpp"
+#include "ser.hpp"
 #include "posicao.hpp"
 
 ControladorSimulacao::ControladorSimulacao(Grid *grid, float segundos_por_ciclo):
@@ -12,13 +13,17 @@ void ControladorSimulacao::atualizar(float tempo){
         _grid->set_seres_vivos(_grid->get_seres_vivos());
         for(int i = 0; i < _grid->get_largura(); i++)
             for(int j = 0; j < _grid->get_altura(); j++)
-                if(_grid->get_celula(i, j) != nullptr){ //se a posicao nao estiver vazia (ou seja, esta com uma celula)  
+                if(_grid->get_celula(i, j) != nullptr && _grid->get_celula(i,j)->get_tipo()!=2){ //se a posicao nao estiver vazia (ou seja, esta com uma celula)  
                     Posicao posicaoAtual(i,j);
                     _grid->atualizar_posicao(posicaoAtual);//atualiza ela
 
-                    if(_grid->get_celula(i,j)->reroduzir())//se a celula for reproduzir
-                        _grid->set_celula(_grid->get_celula()->get_tipo(),i ,j);//cria uma nova celula no local designado
-                    };
+                    Celula* celula = _grid->get_celula(i, j);
+                    Ser* ser = dynamic_cast<Ser*>(celula);
+
+                    if (ser != nullptr && ser->reproduzir()) {//se for Ser e for reproduzir
+                        Posicao filho = ser->get_posi_filho();
+                        _grid->set_celula(ser->get_tipo(), filho.get_x(), filho.get_y());//cria o filho na posicao
+                    }
                 }
     }
 };
