@@ -298,6 +298,11 @@ void Gerenciador_arquivo::save(Grid& grid, int ciclo_atual)
     limpar_buffer(this->_file_buffer);
 }
 
+void Gerenciador_arquivo::save(Grid& grid)
+{
+    save(grid,grid.get_ciclos());
+}
+
 void Gerenciador_arquivo::stats_update(Grid& grid)
 {
     int seres=0,plantas=0,carnivoros=0,herbivoros=0;
