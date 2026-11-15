@@ -4,7 +4,8 @@
 
 Ser::Ser(int x, int y)
     : Celula(x, y), _energia(100), _idade(0),
-      _qtd_filhos(0), _regras(""),_quer_reproduzir(false),_posi_filho(x,y)
+      _qtd_filhos(0), _regras(""),
+      _quer_reproduzir(false), _posi_filho(x, y)
 {
 }
 
@@ -40,7 +41,6 @@ void Ser::atualizar(Grid *grid)
     this->set_idade(get_idade() + 1);
     this->set_energia(get_energia() - 1);
 }
-
 
 bool Ser::reproduzir()
 {
