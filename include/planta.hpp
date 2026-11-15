@@ -7,7 +7,7 @@ private:
 public:
     Planta(int x, int y);
 
-    //recebe 0 grid, e atualiza a planta de acordo com as regras do jogo
+    //recebe um subgrid, e atualiza a planta de acordo com as regras do jogo
     virtual void atualizar(Grid *grid) override;
 
     int get_tipo() const;
