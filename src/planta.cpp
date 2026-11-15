@@ -1,8 +1,7 @@
 #include "planta.hpp"
 #include "posicao.hpp"
 #include "ser.hpp"
-#include "grid.hpp"
-#include <iostream>
+#include "grid.hpp" 
 
 Planta::Planta(int x, int y):
     Ser(x, y){};
@@ -14,7 +13,7 @@ void Planta::atualizar(Grid *grid){
     if(_energia<5)
         return;
 
-    if(_energia >= 5) //se a energia da planta for maior ou igual a 5, ela se reproduzir
+    if(_energia >= 5) //se a energia da planta for maior ou igual a 5, ela se reproduz
         //procura uma celula vazia ao redor da planta para colocar a nova planta  
         for(int i = 0; i <= 2; i++)
             for(int j = 0; j <= 2; j++) 

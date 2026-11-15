@@ -118,8 +118,8 @@ void Grid::set_seres_vivos(int qtd){
 
 void Grid::atualizar_posicao(Posicao &posicao){
     Grid *visao = get_grid(posicao, 1); //criando um sub-grid com raio 1
-    _grid[posicao.get_x()][posicao.get_y()]->atualizar(visao);//atualizando a celula
-    delete visao;//deletando o subgrid criado)
+    _grid[posicao.get_x()][posicao.get_y()]->atualizar(visao);//atualizando a celula 
+    delete visao;//deletando o subgrid criado
 };
 
 Grid::~Grid() {
