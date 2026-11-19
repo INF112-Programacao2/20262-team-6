@@ -3,23 +3,23 @@
 #include <SFML/Graphics.hpp>
 #include "grid.hpp"
 
-class Interface
-{
+class Interface{
 private:
     Grid *_grid;
     int _tam_celula;
+    //tipo que o botao esquerdo do mouse desenha 
+    int _tipo_selecionado;
     sf::RenderWindow _janela;
-    sf::Clock _relogio;
-    float _acumulado, _segundos_por_ciclo;
-    bool _pausado, _avancar_um;
-
     void processar_eventos();
-    void atualizar();
+    //coloca uma celula do tipo dado na posicao do grid que esta embaixo do pixel (tipo 0 apaga)
+    void pintar(sf::Vector2i pixel, int tipo);
     void desenhar();
+    void atualizar_titulo();
     sf::Color cor_do_tipo(int tipo) const;
 
 public:
     Interface(Grid *grid, int tam_celula);
+    //abre a janela e so retorna quando ela for fechada
     void executar();
 };
 
