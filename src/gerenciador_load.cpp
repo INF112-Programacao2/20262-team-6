@@ -5,7 +5,11 @@
 #include <fstream>
 #include <iostream>
 
-Gerenciador_load::Gerenciador_load(const std::string &arquivo): Gerenciador_io(arquivo){}
+Gerenciador_load::Gerenciador_load(const std::string &arquivo): Gerenciador_io(arquivo)
+{
+    //verifica se o arquivo existe
+    set_file(arquivo);
+}
 
 void Gerenciador_load::set_file(const std::string &arquivo)
 {
