@@ -1,6 +1,6 @@
 #include "gerenciador_de_arquivos.hpp"
 
-Gerenciador_de_arquivos::Gerenciador_de_arquivos(const std::string &arquivo): _file_name(arquivo), _capacidade(0), _tamanho(0) {}
+Gerenciador_de_arquivos::Gerenciador_de_arquivos(const std::string &arquivo): _file_name(arquivo), _capacidade(10), _tamanho(0), _max_ciclos(100) {}
 
 void Gerenciador_de_arquivos::set_file(const std::string &arquivo)
 {
@@ -10,6 +10,11 @@ void Gerenciador_de_arquivos::set_file(const std::string &arquivo)
 std::string Gerenciador_de_arquivos::get_file() const
 {
     return this->_file_name;
+}
+
+int Gerenciador_de_arquivos::get_max_ciclos() const
+{
+    return this->_max_ciclos;
 }
 
 Gerenciador_de_arquivos::~Gerenciador_de_arquivos(){}
