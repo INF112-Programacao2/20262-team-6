@@ -17,4 +17,9 @@ int Gerenciador_de_arquivos::get_max_ciclos() const
     return this->_max_ciclos;
 }
 
+void Gerenciador_de_arquivos::set_max_ciclos(int max_ciclos)
+{
+    this->_max_ciclos = max_ciclos;
+}
+
 Gerenciador_de_arquivos::~Gerenciador_de_arquivos(){}

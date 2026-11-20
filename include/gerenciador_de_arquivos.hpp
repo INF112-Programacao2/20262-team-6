@@ -24,6 +24,7 @@ public:
     std::string get_file() const;
 
     int get_max_ciclos() const;
+    void set_max_ciclos(int ciclos);
 
     virtual ~Gerenciador_de_arquivos();
 };
