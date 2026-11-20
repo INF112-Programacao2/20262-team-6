@@ -10,6 +10,7 @@ private:
     Celula ***_grid;
     int _largura,_altura,_ciclos,_seres_vivos;
 public:
+    Grid(int tamanho);
     Grid(int largura,int altura);
 
     void set_celula(int tipo, int x, int y);

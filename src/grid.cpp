@@ -22,6 +22,22 @@ Grid::Grid(int largura,int altura)
     }
 }
 
+
+Grid::Grid(int tamanho){
+    _largura = tamanho;
+    _altura = tamanho;
+    _ciclos = 0;
+    _seres_vivos = 0;
+    //criando a matriz de ponteiros para Celula
+    _grid = new Celula**[_largura];
+
+    //para cada linha, cria as colunas e define como nullptr
+    for (int i = 0; i < _largura; i++) {
+        _grid[i] = new Celula*[_altura];
+        for (int j = 0; j < _altura; j++)
+            _grid[i][j] = nullptr;
+    }};
+
 void Grid::set_celula(int tipo, int x, int y)
 {
     //criando uma nova celula e adicionando na matriz
