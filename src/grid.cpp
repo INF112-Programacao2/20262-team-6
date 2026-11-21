@@ -137,3 +137,15 @@ Grid::~Grid() {
     }
     delete[] _grid;
 };
+
+int Grid::get_largura(){
+    return _largura;
+};
+
+int Grid::get_altura(){
+    return _altura;
+};
+
+int Grid::get_ciclos(){
+    return _ciclos;
+};
