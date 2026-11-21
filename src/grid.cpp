@@ -43,22 +43,25 @@ void Grid::set_celula(int tipo, int x, int y)
     //criando uma nova celula e adicionando na matriz
     Celula *new_celula = nullptr;
     switch (tipo) {
-    // case 0:
-    //     new_celula = new Ser(x, y);
-    //     break;
+     case 0:
+        new_celula = new Ser(x, y);
+        break;
     case 1:
         new_celula = new Planta(x, y);
         break;
-    // case 2:
-    //     new_celula = new Parede(x, y);
-    //     break;
-    // case 3:
-    //     new_celula = new Carnivoro(x, y);
-    //     break;
-    // case 4:
-    //     new_celula = new Herbivoro(x, y);
-    //     break;
+    case 2:
+        new_celula = new Parede(x, y);
+         break;
+     case 3:
+         new_celula = new Carnivoro(x, y);
+         break;
+     case 4:
+         new_celula = new Herbivoro(x, y);
+         break;
     };
+
+    delete _grid[x][y];
+    _grid[x][y] = new_celula;
 
     _grid[x][y] = new_celula;
 }
@@ -165,3 +168,10 @@ int Grid::get_altura(){
 int Grid::get_ciclos(){
     return _ciclos;
 };
+
+void Grid::mover_celula(int x_antigo, int y_antigo, int x_novo, int y_novo)
+{
+    delete _grid[x_novo][y_novo];
+    _grid[x_novo][y_novo] = _grid[x_antigo][y_antigo];
+    _grid[x_antigo][y_antigo] = nullptr;
+}

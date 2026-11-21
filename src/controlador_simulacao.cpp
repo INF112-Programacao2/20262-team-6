@@ -16,6 +16,14 @@ void ControladorSimulacao::atualizar(float tempo){
                     if(_grid->get_celula(i, j) != nullptr && _grid->get_celula(i,j)->get_tipo()!=2){ //se a posicao nao estiver vazia (ou seja, esta com uma celula) ou nao for parede  
                         Posicao posicaoAtual(i,j);
                         _grid->atualizar_posicao(posicaoAtual);//atualiza ela
+            
+                        //movendo a celula
+                        Posicao posicaoNova = _grid->get_celula(i, j)->get_position();
+                        int novo_x = posicaoNova.get_x();
+                        int novo_y = posicaoNova.get_y();
+
+                        if ((novo_x != i || novo_y != j) && _grid->is_valid(novo_x, novo_y)) 
+                            _grid->mover_celula(i, j, novo_x, novo_y);
 
                         //downcasting para Ser
                         Celula* celula = _grid->get_celula(i, j);
