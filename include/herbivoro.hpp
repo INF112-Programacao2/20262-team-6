@@ -14,6 +14,8 @@ public:
     virtual void atualizar(Grid *grid) override;
 
     int get_qtd_celulas_comidas();
+
+    int get_tipo() const;
     
     ~Herbivoro();
 };
