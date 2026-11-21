@@ -24,8 +24,10 @@ const float ESPACO_BOTOES = 8.f;
 const float CICLO_MAIS_RAPIDO = 0.05f;
 const float CICLO_MAIS_LENTO = 2.f;
 
-Interface::Interface(ControladorSimulacao *controlador, Gerenciador_arquivo *gerenciador, int tam_celula)
-    : _controlador(controlador), _gerenciador(gerenciador), _grid(controlador->get_grid()),
+Interface::Interface(ControladorSimulacao *controlador, Gerenciador_save *gerenciador_save,
+                     Gerenciador_load *gerenciador_load, int tam_celula)
+    : _controlador(controlador), _gerenciador_save(gerenciador_save), _gerenciador_load(gerenciador_load),
+      _grid(controlador->get_grid()),
       _tam_celula(tam_celula), _tipo_selecionado(1), _tempo_acumulado(0.f), _mensagem(""),
       //a janela tem o tamanho do grid mais o painel e nao pode ser redimensionada
       _janela(sf::VideoMode({static_cast<unsigned int>(std::max(_grid->get_largura() * tam_celula, LARGURA_MINIMA)),
@@ -297,8 +299,8 @@ void Interface::mudar_velocidade(float fator)
 void Interface::salvar()
 {
     try {
-        _gerenciador->save(*_grid);
-        _mensagem = "Salvo em " + _gerenciador->get_save();
+        _gerenciador_save->save(*_grid);
+        _mensagem = "Salvo em " + _gerenciador_save->get_file();
     } catch (const std::exception &erro) {
         //so a primeira linha do erro cabe no painel
         _mensagem = std::string(erro.what());
@@ -310,7 +312,7 @@ void Interface::carregar()
 {
     try {
         //o gerenciador devolve um grid novo; as celulas dele sao copiadas para o grid da simulacao
-        Grid *carregado = _gerenciador->load();
+        Grid *carregado = _gerenciador_load->load();
         for (int x = 0; x < _grid->get_largura(); x++)
             for (int y = 0; y < _grid->get_altura(); y++)
             {
@@ -320,7 +322,7 @@ void Interface::carregar()
                 _grid->set_celula(tipo, x, y);
             }
         delete carregado;
-        _mensagem = "Carregado de " + _gerenciador->get_file();
+        _mensagem = "Carregado de " + _gerenciador_load->get_file();
     } catch (const std::exception &erro) {
         _mensagem = std::string(erro.what());
         _mensagem = "Erro: " + _mensagem.substr(0, _mensagem.find('\n'));

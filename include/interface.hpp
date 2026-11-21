@@ -4,13 +4,15 @@
 #include <string>
 #include "grid.hpp"
 #include "controlador_simulacao.hpp"
-#include "gerenciador_arquivos.hpp"
+#include "gerenciador_save.hpp"
+#include "gerenciador_load.hpp"
 
 class Interface{
 private:
-    //a interface nao e dona do controlador nem do gerenciador, entao nao deleta essas classes
+    //a interface nao e dona do controlador nem dos gerenciadores, entao nao deleta essas classes
     ControladorSimulacao *_controlador;
-    Gerenciador_arquivo *_gerenciador;
+    Gerenciador_save *_gerenciador_save;
+    Gerenciador_load *_gerenciador_load;
     Grid *_grid;
     int _tam_celula;
     //tipo que o botao esquerdo do mouse desenha
@@ -49,7 +51,8 @@ private:
 
 public:
     //throw um runtime_error se a fonte nao for encontrada
-    Interface(ControladorSimulacao *controlador, Gerenciador_arquivo *gerenciador, int tam_celula);
+    Interface(ControladorSimulacao *controlador, Gerenciador_save *gerenciador_save,
+              Gerenciador_load *gerenciador_load, int tam_celula);
     //abre a janela e so retorna quando ela for fechada
     void executar();
 };
