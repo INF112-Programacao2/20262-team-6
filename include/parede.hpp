@@ -8,6 +8,8 @@ private:
 
 public:
     //lembrar de atualizar o _tipo
+    int get_tipo() const;
+
     Parede(int x, int y);
 
     void atualizar(Grid *grid);
