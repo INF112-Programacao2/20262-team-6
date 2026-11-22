@@ -31,7 +31,7 @@ void ControladorSimulacao::atualizar(float tempo){
                         };
 
                         //downcasting para Ser
-                        Celula* celula = _grid->get_celula(i, j);
+                        Celula* celula = _grid->get_celula(novo_x, novo_y);
                         Ser* ser = dynamic_cast<Ser*>(celula);
 
                         if (ser != nullptr && ser->reproduzir()) {//se for Ser e for reproduzir
