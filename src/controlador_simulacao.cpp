@@ -17,11 +17,15 @@ void ControladorSimulacao::atualizar(float tempo){
             for(int i = 0; i < _grid->get_largura(); i++)
                 for(int j = 0; j < _grid->get_altura(); j++){
                     if(_grid->get_celula(i, j) != nullptr && gridBool[i][j] && _grid->get_celula(i,j)->get_tipo()!=2){ //se a posicao nao estiver vazia (ou seja, esta com uma celula) ou nao for parede  
+                        
+                        //ponteiro pro ser
+                        Celula* celula = _grid->get_celula(i, j);
+                        
                         Posicao posicaoAtual(i,j);
                         _grid->atualizar_posicao(posicaoAtual);//atualiza ela
-            
+                        
                         //movendo a celula
-                        Posicao posicaoNova = _grid->get_celula(i, j)->get_position();//pega o novo local da celula
+                        Posicao posicaoNova = celula->get_position();//pega o novo local da celula
                         int novo_x = posicaoNova.get_x();
                         int novo_y = posicaoNova.get_y();
 
@@ -30,10 +34,9 @@ void ControladorSimulacao::atualizar(float tempo){
                             gridBool[novo_x][novo_y] = false;//impedindo que a celula seja atualizada dnv
                         };
 
-                        //downcasting para Ser
-                        Celula* celula = _grid->get_celula(novo_x, novo_y);
-                        Ser* ser = dynamic_cast<Ser*>(celula);
 
+                        //downcasting para Ser
+                        Ser* ser = dynamic_cast<Ser*>(celula);
                         if (ser != nullptr && ser->reproduzir()) {//se for Ser e for reproduzir
                             Posicao filho = ser->get_posi_filho();
                             _grid->set_celula(ser->get_tipo(), filho.get_x(), filho.get_y());//cria o filho na posicao
