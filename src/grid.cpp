@@ -95,11 +95,11 @@ Grid *Grid::get_grid(Posicao &posicao, int visao)
     {
         for(int j = -visao; j <= visao; j++)
         {
-            if(is_valid(x+i, y+j)) 
+            if(is_valid(x+i, y+j)) {
                 //adiciona a celula na posicao (x+i,y+j) do grid original na posicao (i+visao,j+visao) do novo grid
                 if(_grid[x+i][y+j]!=nullptr)  
-                new_grid->set_celula(_grid[x+i][y+j]->get_tipo(), i+visao, j+visao);
-            else
+                    new_grid->set_celula(_grid[x+i][y+j]->get_tipo(), i+visao, j+visao);
+            }else
                 //se a posicao estiver fora do grid...
                 new_grid->set_celula(2, i+visao, j+visao);//cria uma parede no local, para nao ser considerado vazio
         }
