@@ -1,5 +1,5 @@
 #include"parede.hpp"
-#include"celula.cpp"
+#include"celula.hpp"
 
 Parede::Parede(int x, int y) : Celula(x, y){
 }

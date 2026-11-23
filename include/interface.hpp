@@ -34,7 +34,7 @@ private:
     void desenhar_painel();
     void escrever(const std::string &texto, float x, float y, sf::Color cor);
 
-    //coloca uma celula do tipo dado na posicao do grid que esta embaixo do pixel (tipo 0 apaga)
+    //coloca uma celula do tipo dado na posicao do grid que esta embaixo do pixel (VAZIO apaga)
     void pintar(sf::Vector2i pixel, int tipo);
     sf::Color cor_do_tipo(int tipo) const;
     std::string nome_do_tipo(int tipo) const;
