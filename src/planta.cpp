@@ -19,7 +19,7 @@ void Planta::atualizar(Grid *grid){
             for(int j = 0; j <= 2; j++) 
                 //se a celula estiver vazia
                 if(grid->get_celula(i, j) == nullptr){ 
-                    Posicao posicao_filho(get_position().get_x()-i,get_position().get_y()-j);//criando a posicao relativa ao grid original
+                     Posicao posicao_filho(get_position().get_x()+i-1,get_position().get_y()+j-1);//criando a posicao relativa ao grid original
                     _quer_reproduzir = true;//indica que quer reproduzir (sera usado pelo controlador_simulacao)
                     _posi_filho = posicao_filho;//local onde o filho nascera (sera usado pelo controlador_simulacao)
                     set_energia(get_energia()-5); //reduz 5 da energia da planta
