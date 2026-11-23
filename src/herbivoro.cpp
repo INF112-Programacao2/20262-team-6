@@ -1,6 +1,6 @@
 #include "herbivoro.hpp"
 #include "ser.hpp"
-#include "grid.cpp"
+#include "grid.hpp"
 
 Herbivoro::Herbivoro(int x, int y) : Ser(x, y) {
     set_energia(40); 

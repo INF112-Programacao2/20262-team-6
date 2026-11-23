@@ -36,6 +36,11 @@ std::string Ser::get_regras(){
     return this->_regras;
 }
 
+int Ser::get_tipo() const
+{
+    return 0; //ser generico
+}
+
 void Ser::atualizar(Grid *grid)
 {
     this->set_idade(get_idade() + 1);

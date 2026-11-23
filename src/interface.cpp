@@ -14,6 +14,8 @@ const int TAM_FONTE = 16;
 const int ALTURA_PAINEL = 136;
 //largura minima para os botoes caberem
 const int LARGURA_MINIMA = 800;
+//o tipo 0 é o ser generico, entao posicao vazia usa um numero que o Grid nao conhece
+const int VAZIO = -1;
 
 const int QTD_BOTOES = 6;
 const float LARGURA_BOTOES[QTD_BOTOES] = {130.f, 90.f, 40.f, 40.f, 100.f, 130.f};
@@ -88,7 +90,7 @@ void Interface::processar_eventos()
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
         pintar(sf::Mouse::getPosition(_janela), _tipo_selecionado);
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
-        pintar(sf::Mouse::getPosition(_janela), 0);
+        pintar(sf::Mouse::getPosition(_janela), VAZIO);
 }
 
 void Interface::atualizar()
@@ -128,7 +130,7 @@ void Interface::pintar(sf::Vector2i pixel, int tipo)
 
     //se a celula ja é desse tipo, nao cria outra por cima
     Celula *celula = _grid->get_celula(x, y);
-    int tipo_atual = 0;
+    int tipo_atual = VAZIO;
     if (celula != nullptr)
         tipo_atual = celula->get_tipo();
     if (tipo_atual == tipo)
@@ -316,7 +318,7 @@ void Interface::carregar()
         for (int x = 0; x < _grid->get_largura(); x++)
             for (int y = 0; y < _grid->get_altura(); y++)
             {
-                int tipo = 0;
+                int tipo = VAZIO;
                 if (carregado->is_valid(x, y) && carregado->get_celula(x, y) != nullptr)
                     tipo = carregado->get_celula(x, y)->get_tipo();
                 _grid->set_celula(tipo, x, y);
@@ -333,6 +335,8 @@ sf::Color Interface::cor_do_tipo(int tipo) const
 {
     //mesmos numeros usados em Grid::set_celula
     switch (tipo) {
+    case 0:
+        return sf::Color(90, 140, 230); //ser generico
     case 1:
         return sf::Color(60, 180, 75); //planta
     case 2:
@@ -348,6 +352,8 @@ sf::Color Interface::cor_do_tipo(int tipo) const
 std::string Interface::nome_do_tipo(int tipo) const
 {
     switch (tipo) {
+    case 0:
+        return "Ser";
     case 1:
         return "Planta";
     case 2:
