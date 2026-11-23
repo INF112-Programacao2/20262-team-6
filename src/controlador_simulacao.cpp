@@ -13,7 +13,7 @@ void ControladorSimulacao::atualizar(float tempo){
     for(int i = 0; i < _grid->get_largura(); i++)
         for(int j = 0; j < _grid->get_altura(); j++)
             gridBool[i][j]=true;
-             
+
     if(!_pausado){//so ira atualizar se nao estiver pausado
         int num_de_ciclos = tempo / get_segundos_por_ciclo(); //qtd de ciclos 
         for(int x = 0; x<num_de_ciclos; x++){ //roda x ciclos
@@ -41,7 +41,12 @@ void ControladorSimulacao::atualizar(float tempo){
 
                         //downcasting para Ser
                         Ser* ser = dynamic_cast<Ser*>(celula);
-                        if (ser != nullptr && ser->reproduzir()) {//se for Ser e for reproduzir
+                         //verifica se o ser morreu no turno e limpa do grid
+                        if (ser != nullptr && ser->get_energia() <= 0) { 
+                            _grid->set_celula(-1, i, j); //  deixa como nullptr
+                            gridBool[i][j] = false;
+                            continue;
+                        }else if (ser != nullptr && ser->reproduzir()) {//se for Ser e for reproduzir
                             Posicao filho = ser->get_posi_filho();
                             _grid->set_celula(ser->get_tipo(), filho.get_x(), filho.get_y());//cria o filho na posicao
                         }
