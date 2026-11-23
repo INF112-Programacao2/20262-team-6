@@ -9,7 +9,11 @@ _grid(grid),_pausado(false),_segundos_por_ciclo(segundos_por_ciclo),_tempo_acumu
 //obs: precisamos criar um grid de bool, pra dizer quais celulas ja foram atualizadas(para que uma celula que se moveu nao seja atualizada mais de uma vez)
 void ControladorSimulacao::atualizar(float tempo){
     //criando o grid de suporte (todas as celulas podem ser atualizadas)
-    bool gridBool[_grid->get_largura()][_grid->get_altura()] = {true}; 
+    bool gridBool[_grid->get_largura()][_grid->get_altura()];
+    for(int i = 0; i < _grid->get_largura(); i++)
+        for(int j = 0; j < _grid->get_altura(); j++)
+            gridBool[i][j]=true;
+             
     if(!_pausado){//so ira atualizar se nao estiver pausado
         int num_de_ciclos = tempo / get_segundos_por_ciclo(); //qtd de ciclos 
         for(int x = 0; x<num_de_ciclos; x++){ //roda x ciclos
