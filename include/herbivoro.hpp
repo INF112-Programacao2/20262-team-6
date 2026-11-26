@@ -7,6 +7,10 @@ private:
     int _qtd_celulas_comidas;
     void set_qtd_celulas_comidas(int qtd);
 
+    bool reproduzirHerbivoro(Grid *grid);
+    bool alimentar(Grid *grid);
+    bool andar(Grid *grid);
+    
 public:
     //lembrar de atualizar o _tipo
     Herbivoro(int x, int y);
@@ -16,7 +20,7 @@ public:
     int get_qtd_celulas_comidas();
 
     int get_tipo() const;
-    
+
     ~Herbivoro();
 };
 #endif
