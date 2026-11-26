@@ -20,6 +20,8 @@ public:
     int get_idade();
     int get_energia();
     std::string get_regras();
+    //ser generico e o tipo 0; as derivadas sobrescrevem com o proprio tipo
+    virtual int get_tipo() const override;
     virtual void atualizar(Grid *grid);
 
     //retorna true uma unica vez quando o ser quer ter um filho

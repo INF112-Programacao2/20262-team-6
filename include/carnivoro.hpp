@@ -7,12 +7,14 @@ private:
     int _qtd_celulas_comidas;
     void set_qtd_celulas_comidas(int qtd);
 public:
-    //lembrar de atualizar o _tipo
+
     Carnivoro(int x, int y);
 
     virtual void atualizar(Grid *grid) override;
 
     int get_qtd_celulas_comidas();
+
+    int get_tipo() const;
 
     ~Carnivoro();
 };
