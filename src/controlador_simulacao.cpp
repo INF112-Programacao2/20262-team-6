@@ -18,7 +18,7 @@ void ControladorSimulacao::atualizar(float tempo){
         int num_de_ciclos = tempo / get_segundos_por_ciclo(); //qtd de ciclos 
         for(int x = 0; x<num_de_ciclos; x++){ //roda x ciclos
             _grid->passar_ciclo();
-            for(int i = 0; i < _grid->get_largura(); i++)
+            for(int i = 0; i < _grid->get_largura(); i++){
                 for(int j = 0; j < _grid->get_altura(); j++){
                     if(_grid->get_celula(i, j) != nullptr && gridBool[i][j] && _grid->get_celula(i,j)->get_tipo()!=2){ //se a posicao nao estiver vazia (ou seja, esta com uma celula) ou nao for parede  
                         
@@ -54,7 +54,8 @@ void ControladorSimulacao::atualizar(float tempo){
 
                     gridBool[i][j] = false;//impede que a celula atual seja atualizado dnv
                 }
-                _grid->set_seres_vivos(_grid->get_seres_vivos());
+            }
+            _grid->set_seres_vivos(_grid->get_seres_vivos());
         }
     }
 };
