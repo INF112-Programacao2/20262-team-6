@@ -10,14 +10,9 @@
 #include <stdexcept>
 #include <iostream>
 #include <memory>
-#include <iostream>
-#include <memory>
 
 //possivelmente passar pelos argumentos da main
 const int TAM_CELULA=50;
-const int TAM_MAPA=20;
-const float SEG_CIC=20;
-const int NUM_CIC=20;
 const float SEC_PER_CICLO = 0.5;
 
 // funcao recursiva de tratamento de excecao
@@ -85,21 +80,6 @@ int main(int argc, char* argv[])
     }
     catch(const std::invalid_argument &e)
     {
-        std::cerr << e.what() << std::endl;
-    }
-    
-    std::unique_ptr<Grid>mapa=(new Grid(TAM_MAPA);
-    ControladorSimulacao simulacao(mapa, SEG_CIC);
-    if(gui){//versao grafica
-        Interface interface(mapa, TAM_CELULA)
-        for(int i = 0; i < NUM_CIC; i++){
-            simulacao.avancar_ciclo();
-            intergace.executar();
-        }
-    }else if(headless){//versao headless
-        for(int i = 0; i < NUM_CIC; i++)
-            simulacao.avancar_ciclo();
-    }
         std::cerr << e.what() << '\n';
         return 1;
     }
