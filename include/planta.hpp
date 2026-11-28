@@ -2,8 +2,7 @@
 #define PLANTA_HPP
 #include "ser.hpp"
 class Planta : public Ser {
-private:
-    int _energia;
+private:  
 public:
     Planta(int x, int y);
 

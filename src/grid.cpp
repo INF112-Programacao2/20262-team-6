@@ -22,27 +22,46 @@ Grid::Grid(int largura,int altura)
     }
 }
 
+
+Grid::Grid(int tamanho){
+    _largura = tamanho;
+    _altura = tamanho;
+    _ciclos = 0;
+    _seres_vivos = 0;
+    //criando a matriz de ponteiros para Celula
+    _grid = new Celula**[_largura];
+
+    //para cada linha, cria as colunas e define como nullptr
+    for (int i = 0; i < _largura; i++) {
+        _grid[i] = new Celula*[_altura];
+        for (int j = 0; j < _altura; j++)
+            _grid[i][j] = nullptr;
+    }};
+
 void Grid::set_celula(int tipo, int x, int y)
 {
     //criando uma nova celula e adicionando na matriz
     Celula *new_celula = nullptr;
     switch (tipo) {
-    case 0:
-        new_celula = new Ser(x, y);
-        break;
+    // case 0:
+    //     new_celula = new Ser(x, y);
+    //     break;
     case 1:
         new_celula = new Planta(x, y);
         break;
-    case 2:
-        new_celula = new Parede(x, y);
-        break;
-    case 3:
-        new_celula = new Carnivoro(x, y);
-        break;
-    case 4:
-        new_celula = new Herbivoro(x, y);
-        break;
+     case 2:
+         new_celula = new Parede(x, y);
+         break;
+     case 3:
+         new_celula = new Carnivoro(x, y);
+         break;
+     case 4:
+         new_celula = new Herbivoro(x, y);
+         break;
     };
+
+    delete _grid[x][y];
+    _grid[x][y] = new_celula;
 
     _grid[x][y] = new_celula;
 }
@@ -76,11 +95,11 @@ Grid *Grid::get_grid(Posicao &posicao, int visao)
     {
         for(int j = -visao; j <= visao; j++)
         {
-            if(is_valid(x+i, y+j)) 
+            if(is_valid(x+i, y+j)) {
                 //adiciona a celula na posicao (x+i,y+j) do grid original na posicao (i+visao,j+visao) do novo grid
                 if(_grid[x+i][y+j]!=nullptr)  
-                new_grid->set_celula(_grid[x+i][y+j]->get_tipo(), i+visao, j+visao);
-            else
+                    new_grid->set_celula(_grid[x+i][y+j]->get_tipo(), i+visao, j+visao);
+            }else
                 //se a posicao estiver fora do grid...
                 new_grid->set_celula(2, i+visao, j+visao);//cria uma parede no local, para nao ser considerado vazio
         }
@@ -149,3 +168,10 @@ int Grid::get_altura(){
 int Grid::get_ciclos(){
     return _ciclos;
 };
+
+void Grid::mover_celula(int x_antigo, int y_antigo, int x_novo, int y_novo)
+{
+    delete _grid[x_novo][y_novo];
+    _grid[x_novo][y_novo] = _grid[x_antigo][y_antigo];
+    _grid[x_antigo][y_antigo] = nullptr;
+}
